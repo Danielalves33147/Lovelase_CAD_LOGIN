@@ -3,7 +3,8 @@ import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from 'react-router-dom';
 import arrowImg from "../../assets/arrow.svg";
 import { auth } from "../../services/firebaseConfig";
-import { load, sucess, fail }  from "../../services/alert.js";
+import { load, sucess, fail, ForgotPassword }  from "../../services/alert.js";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 import "./styles.css";
 
@@ -58,6 +59,12 @@ export function Login() {
     }
   }, [loading, user, error]); // Update only on changes to these variables
 
+
+  function handleForgotPassword() {
+    ForgotPassword();
+  }
+  
+
   return (
     <div className="container">
       <header className="header">
@@ -89,9 +96,7 @@ export function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-
-        <a href="#">Esqueceu sua senha?</a>
-
+        <a href="#" onClick={handleForgotPassword}>Esqueceu sua senha?</a>
         <button className="button" onClick={handleSignIn}>
           Entrar <img src={arrowImg} alt="->" />
         </button>

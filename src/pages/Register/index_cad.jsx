@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from 'react-router-dom';
 import arrowImg from "../../assets/arrow.svg";
 import { auth } from "../../services/firebaseConfig";
-import { load, sucess, fail }  from "../../services/alert.js";
+import { load_cad, sucess_cad, fail_cad }  from "../../services/alert.js";
 
 import "./styles.css";
 
@@ -11,8 +11,8 @@ export function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
     
   const navigate = useNavigate();
 
@@ -40,20 +40,19 @@ export function Register() {
 
   useEffect(() => {
     if (loading) {
-      load();
+      load_cad();
     }
     if (user) {
-      sucess();
-      navigate('/tool'); // Navigate to the tool page
+      sucess_cad();
     }else if(error){
-      fail();
+      fail_cad();
     }
   }, [loading, user, error]); // Update only on changes to these variables
 
   
   function handleSignIn(e) { //Envia os dados pro firebase
     e.preventDefault();
-    signInWithEmailAndPassword(email, password);
+    createUserWithEmailAndPassword(email, password);
   }
 
   return (
@@ -87,15 +86,12 @@ export function Register() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-
-        <a href="#">Esqueceu sua senha?</a>
-
         <button className="button" onClick={handleSignIn}>
-          Entrar <img src={arrowImg} alt="->" />
+          Cadastrar <img src={arrowImg} alt="->" />
         </button>
         <div className="footer">
           <p>Você já tem uma conta?</p>
-          <Link to="/login">Faça login aqui</Link>
+          <Link to="/">Faça login aqui</Link>
         </div>
       </form>
     </div>

@@ -7,8 +7,7 @@ import Swal from 'sweetalert2';
 
 export function Tool() {
   return (
-    class lovelace extends React.Component{
-        render(){
+
             <body>
     <header>
         <h2>Lovelace</h2>
@@ -51,7 +50,5 @@ export function Tool() {
         <p>Orientado pela <span>Prof. Dr. Lenade Barreto</span>.</p>
     </footer>
 </body>
-        }
-    }
  );
 }
