@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from 'react-router-dom';
-import arrowImg from "../../assets/arrow.svg";
-import { auth } from "../../services/firebaseConfig";
-import "./lovestyles.css";
+
+import "./styles.css";
+
+import Swal from 'sweetalert2';
 
 export function Tool() {
   return (

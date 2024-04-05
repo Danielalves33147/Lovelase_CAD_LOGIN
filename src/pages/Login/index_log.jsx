@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from 'react-router-dom';
 import arrowImg from "../../assets/arrow.svg";
 import { auth } from "../../services/firebaseConfig";
+import { load, sucess, fail }  from "../../services/alert.js";
 
-import "./loginstyles.css";
+import "./styles.css";
 
 import Swal from 'sweetalert2';
 
@@ -15,66 +16,47 @@ export function Login() {
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
     
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // Função para limpar os campos de entrada
+  // Function to clear input fields
   function clearFields() {
     setEmail("");
     setPassword("");
   }
+
+  // Store input data in localStorage on any change
+  useEffect(() => {
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", password);
+  }, [email, password]);
+
+  // Retrieve input data from localStorage on component mount
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("email");
+    const storedPassword = localStorage.getItem("password");
+    if (storedEmail && storedPassword) {
+      setEmail(storedEmail);
+      setPassword(storedPassword);
+    }
+  }, []);
 
   function handleSignIn(e) {
     e.preventDefault();
     signInWithEmailAndPassword(email, password);
   }
 
-  if (loading) {
-
-    Swal.fire({
-      title: 'Carregando...',
-      text: 'Por favor, aguarde...',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-    
-    // Simula um processo de carregamento
-    setTimeout(() => { //
-      // Fecha a notificação após 2 segundos
-      Swal.close();
-    }, 2000);
-
-  }
-  if (user) {
-    // Notificação de Sucesso com redirecionamento
-    Swal.fire({
-      icon: 'success',
-      title: 'Sucesso!',
-      text: 'Bem Vindo.',
-      position: 'center',
-      showConfirmButton: false,
-      timer: 3000,
-      toast: true
-    }).then(() => {
-      // Redirecionamento para a rota "tool" após o login
-      navigate('/tool');
-    });
-  }
-  if(error){
-    
-// Exibe a notificação de erro
-Swal.fire({
-  icon: 'error',
-  title: 'Ops! Algo deu errado...',
-  text: 'Usuário ou senha incorretos.',
-  position: 'center',
-  showConfirmButton: false,
-  timer: 3000,
-  toast: true
-});
-  }
+  // Handle loading, success, and error states
+  useEffect(() => {
+    if (loading) {
+      load();
+    }
+    if (user) {
+      sucess();
+      navigate('/tool'); // Navigate to the tool page
+    }else if(error){
+      fail();
+    }
+  }, [loading, user, error]); // Update only on changes to these variables
 
   return (
     <div className="container">
@@ -83,7 +65,7 @@ Swal.fire({
         <span>Informações de Login</span>
       </header>
 
-      <form onSubmit="return ValidateForm()">
+      <form onSubmit={handleSignIn}>
         <div className="inputContainer">
           <label htmlFor="email">E-mail</label>
           <input
@@ -91,7 +73,7 @@ Swal.fire({
             name="email"
             id="email"
             placeholder="lovelace@gmail.com"
-            value={email} // Valor do estado
+            value={email} // Pre-fill with stored value (if available)
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -103,7 +85,7 @@ Swal.fire({
             name="password"
             id="password"
             placeholder="********************"
-            value={password} // Valor do estado
+            value={password} // Pre-fill with stored value (if available)
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
@@ -119,6 +101,5 @@ Swal.fire({
         </div>
       </form>
     </div>
-      
   );
 }
