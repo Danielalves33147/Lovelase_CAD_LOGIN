@@ -8,7 +8,7 @@ export function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/Lovelase_CAD_LOGIN" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/tool" element={<Tool />} />
       </Routes>
